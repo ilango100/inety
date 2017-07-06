@@ -7,14 +7,47 @@ import ( "fmt"
 	"io"
 	"os"
 	"sync"
+	"flag"
 )
 
+func parseArgs() (addr, port string) {
+
+	var help,h bool
+
+	flag.BoolVar(&help,"help",false,"Show usage")
+	flag.BoolVar(&h,"h",false,"Show usage")
+	flag.StringVar(&port,"p","","Port number")
+	flag.StringVar(&addr,"a","","Address to connect to")
+	flag.Parse()
+
+	if (help || h) {
+		flag.Usage()
+		os.Exit(0)
+	}
+
+	if (  (addr == "" || port == "") && flag.NArg() > 0) {
+		switch flag.NArg() {
+		default:
+			fallthrough
+		case 2:
+			port = flag.Arg(1)
+			fallthrough
+		case 1:
+			addr = flag.Arg(0)
+		}
+	}
+	return;
+
+}
+
 func main() {
-	var addr,port string
+	var addr,port string = parseArgs()
 	var wg sync.WaitGroup
 
-	fmt.Println("Enter addr,port")
-	fmt.Scan(&addr,&port)
+	if(addr == "" || port == "") {
+		fmt.Println("Enter addr,port")
+		fmt.Scan(&addr,&port)
+	}
 
 	conn, err := net.Dial("tcp",net.JoinHostPort(addr,port))
 	defer conn.Close()
