@@ -35,6 +35,14 @@ go build -tags debug
 
 ## Usage
 Simply execute inety from commandline, it will ask for address and port on execution.
+Or you can specify the address and port number from commandline:
+```
+inety ftp.gnu.org ftp
+```
+```
+inety -p 21 -a ftp.gnu.org
+```
+
 For port you can use port numbers directly or words like `ftp`, `http`, etc. 
 On connection, you can type in to send to server and result will be received and displayed.
 To end the connection, send the EOF: 
