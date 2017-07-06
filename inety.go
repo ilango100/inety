@@ -4,11 +4,13 @@ import ( "fmt"
 	"net"
 	"io"
 	"os"
-	"bufio"
+	"sync"
 )
 
 func main() {
 	var addr,port string
+	var wg sync.WaitGroup
+
 	fmt.Println("Enter addr,port")
 	fmt.Scan(&addr,&port)
 	fmt.Println("Your input addr: ",addr," port: ",port)
@@ -17,35 +19,29 @@ func main() {
 	defer conn.Close()
 
 	if err != nil {
-		fmt.Println("Error while connecting...")
+		fmt.Println("Error while connecting...",err)
 	}
 	fmt.Println("connected")
 
-	notif := make(chan bool)
+	wg.Add(2)
 
 	go func() {
-		for _,err = io.Copy(os.Stdout,conn) ; err == nil; {
-			_,err = io.Copy(os.Stdout,conn)
+		defer wg.Done()
+		for _,err = io.Copy(os.Stdout,conn) ; err == nil; _,err = io.Copy(os.Stdout,conn) {
+			//nothing to do
 		}
 		fmt.Println("Output is over :",err)
-		notif <- true
 	}()
 
 	go func() {
-		reader := bufio.NewReader(os.Stdin)
-		writer := bufio.NewWriter(conn)
-		for s,err := reader.ReadString('\n') ; err == nil; s,err = reader.ReadString('\n') {
-			writer.WriteString(s)
-			writer.Flush()
+		defer wg.Done()
+		for _,err = io.Copy(conn,os.Stdin) ; err ==nil; _,err = io.Copy(conn,os.Stdin) {
+			//nothing to do actually
 		}
 		fmt.Println("Input is over: ",err)
-		notif <- true
 	}()
-
 
 	if err != nil { fmt.Println("Error: ",err) }
 
-	<-notif
-	<-notif
-
+	wg.Wait()
 }
