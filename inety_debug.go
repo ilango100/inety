@@ -1,4 +1,4 @@
-// +build !debug
+// +build debug
 
 package main
 
@@ -15,6 +15,7 @@ func main() {
 
 	fmt.Println("Enter addr,port")
 	fmt.Scan(&addr,&port)
+	fmt.Println("Your input addr: ",addr," port: ",port)
 
 	conn, err := net.Dial("tcp",net.JoinHostPort(addr,port))
 	defer conn.Close()
@@ -22,6 +23,7 @@ func main() {
 	if err != nil {
 		fmt.Println("Error while connecting...",err)
 	}
+	fmt.Println("connected")
 
 	wg.Add(2)
 
@@ -30,6 +32,7 @@ func main() {
 		for _,err = io.Copy(os.Stdout,conn) ; err == nil; _,err = io.Copy(os.Stdout,conn) {
 			//nothing to do
 		}
+		fmt.Println("Output is over :",err)
 	}()
 
 	go func() {
@@ -37,6 +40,7 @@ func main() {
 		for _,err = io.Copy(conn,os.Stdin) ; err ==nil; _,err = io.Copy(conn,os.Stdin) {
 			//nothing to do actually
 		}
+		fmt.Println("Input is over: ",err)
 	}()
 
 	if err != nil { fmt.Println("Error: ",err) }

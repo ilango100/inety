@@ -1,9 +1,14 @@
-.PHONY: all clean
+.PHONY: all clean debug release
 
-all: inety.exe
+SOURCES = inety.go
 
-inety.exe: inety.go
-	go build $^
+all: debug
+
+debug: $(SOURCES)
+	go build -tags debug
+
+release: $(SOURCES)
+	go build
 
 clean: 
 	rm -f inety.exe
