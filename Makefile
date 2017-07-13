@@ -11,6 +11,6 @@ release: $(SOURCES)
 	go build
 
 clean: 
-	rm -f inety.exe
+	rm -f inety inety.exe
 
 
