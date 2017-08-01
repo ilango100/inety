@@ -1,4 +1,5 @@
 # inety
+[![Build Status](https://travis-ci.org/ilango100/inety.svg?branch=master)](https://travis-ci.org/ilango100/inety) [![Go Report Card](https://goreportcard.com/badge/github.com/ilango100/inety)](https://goreportcard.com/report/github.com/ilango100/inety)
 **inety** is a raw tcp client.
 
 It simply connects to a server on a port you specify and starts sending data from stdin to the server and put the data from server to the stdout.
