@@ -84,9 +84,5 @@ func main() {
 		fmt.Println("Input is over: ", err)
 	}()
 
-	if err != nil {
-		fmt.Println("Error: ", err)
-	}
-
 	wg.Wait()
 }
